@@ -20,14 +20,19 @@ int main() {
     copie_nr_tranzitii++;
   }
 
-//   cout << nr_stari << endl << nr_stari_finale_nfa<< endl;
-//   for(i=0; i < nr_stari_finale_nfa; i++) cout << stari_finale_nfa[i] << " ";
-//   cout << endl << nr_litere << endl;
-//   for(i= 0; i < nr_litere; i++) cout << alfabet[i] << " ";
-//   cout << endl << nr_tranzitii << endl;
-//   for(i= 0; i < nr_tranzitii; i++){ cout << tranzitii[i][0]<< " "<< tranzitii[i][1]<< " "<< tranzitii[i][2];
-//   cout << endl;
-// }
+int nou[100], lnou = 0;
+// completare matrice si lambda_inchiderile cu valori 100 , unde ar fi spatiu nefolosit , pentru a nu fi confuzie cu nodurile = 0
+ for(i = 0; i < nr_stari*nr_litere ; i++ ){
+   for(j = 0; j < nr_stari; j ++)
+     matrice[i][j] = 100;
+ }
+
+ for(i = 0; i < 100 ; i++ ){
+   for(j = 0; j < 100; j ++)
+    if(lambda_inchideri[i][j] == 0 && j!=0)
+     lambda_inchideri[i][j] = 100;
+ }
+
 
   // completarea matricei lambda_inchideri cu lambda_inchiderile fiecarui nod
   int umax = 0;
@@ -41,19 +46,40 @@ int main() {
                 lambda_inchideri[tranzitii[i][0]-'0'][u++] = (tranzitii[i][2]-'0');
                  ok = 1, k = (tranzitii[i][2]- '0');
                  while(ok) {
+                   lnou = 0;
                      ok = 0;
                      for(j = 0; j < nr_tranzitii; j++) {
                        if(tranzitii[j][1] == 'l' && (tranzitii[j][0]-'0') == k) {
-                         lambda_inchideri[tranzitii[i][0]-'0'][u++] = (tranzitii[j][2] - '0');
-                         ok = 1;
-                         k = (tranzitii[j][2]-'0');
+                         int d = 1;
+                         for(int m = 0; m < u; m++){
+                           if( (tranzitii[j][2] - '0') == lambda_inchideri[nr_noduri][m]) d = 0;
+                         }
+                         if( d == 1) {
+                           lambda_inchideri[tranzitii[i][0]-'0'][u++] = (tranzitii[j][2] - '0');
+                           ok = 1;
+                           // nou[lnou++] =  (tranzitii[j][2]-'0');
+                           k = (tranzitii[j][2]-'0');
+                         }
                        }
                      }
-                 }
+
+                   //   if(lnou > 1) {
+                   //   int copi = lnou;
+                   //   for(int r = 0; r < copi; r++){
+                   //     k = nou[r];
+                   //     for(j = 0; j < nr_tranzitii; j++) {
+                   //       if(tranzitii[j][1] == 'l' && (tranzitii[j][0]-'0') == k) {
+                   //         lambda_inchideri[tranzitii[i][0]-'0'][u++] = (tranzitii[j][2] - '0');
+                   //       }
+                   //     }
+                   //   }
+                   // }
+            }
          }
     }
     nr_noduri++;
   }
+
 
  // sterge duplicate din lambda_inchideri
   for(i = 0 ; i < nr_stari; i ++){
@@ -66,17 +92,18 @@ int main() {
   }
 }
 
-// completare matrice si lambda_inchiderile cu valori 100 , unde ar fi spatiu nefolosit , pentru a nu fi confuzie cu nodurile = 0
- for(i = 0; i < nr_stari*nr_litere ; i++ ){
-   for(j = 0; j < nr_stari; j ++)
-     matrice[i][j] = 100;
- }
 
- for(i = 0; i < nr_stari ; i++ ){
-   for(j = 0; j < nr_stari; j ++)
-    if(lambda_inchideri[i][j] == 0 && j!=0)
-     lambda_inchideri[i][j] = 100;
- }
+// // completare matrice si lambda_inchiderile cu valori 100 , unde ar fi spatiu nefolosit , pentru a nu fi confuzie cu nodurile = 0
+//  for(i = 0; i < nr_stari*nr_litere ; i++ ){
+//    for(j = 0; j < nr_stari; j ++)
+//      matrice[i][j] = 100;
+//  }
+//
+//  for(i = 0; i < nr_stari ; i++ ){
+//    for(j = 0; j < nr_stari; j ++)
+//     if(lambda_inchideri[i][j] == 0 && j!=0)
+//      lambda_inchideri[i][j] = 100;
+//  }
 
 
 // completare matrice cu lambda litera lambda pt fiecare nod (nr_litere*nr_stari linii)
@@ -127,23 +154,6 @@ for( i = 0 ; i < nr_stari; i ++) {
         }
    }
 
-// cout << "Lambda inchiderile : " << endl;
-//    for( i = 0 ; i < nr_stari; i ++) {
-//      for( j = 0; j < nr_stari; j++)
-//        cout << lambda_inchideri[i][j] << " ";
-//     cout << endl;
-//    }
-//
-// cout << endl;
-// // //
-//   for( i = 0 ; i < nr_litere*nr_stari; i ++) {
-//     for( j = 0; j < nr_stari; j++)
-//       cout << matrice[i][j] << " ";
-//    cout << endl;
-//   }
-
-
-
   // completare matrice_afd
   for(i = 0; i <= nr_stari; i++){
     for(j = 0; j <= nr_stari; j++)
@@ -185,6 +195,8 @@ for( i = 0 ; i < nr_stari; i ++) {
            }
           }
 
+          for(y = 0; y < 100; y++) v2[y] = 100;
+
            l2 = 0;
              for(  y = 0; y < l; y ++){
                 s = 1;
@@ -222,6 +234,7 @@ for( i = 0 ; i < nr_stari; i ++) {
            }
 
 
+
         int r;
            for(y = 0; y < indice; y++){
              n = 0;
@@ -239,8 +252,10 @@ for( i = 0 ; i < nr_stari; i ++) {
              }
              z++;
 
+
              // adaug in matricea AFD
-             for(y = 0 ; y < nr_stari; y++)  matrice_afd[indice][y] = v2[y];
+             for(y = 0 ; y < nr_stari; y++){  matrice_afd[indice][y] = v2[y];
+             }
              indice ++;
 
 
@@ -268,21 +283,7 @@ for( i = 0 ; i < nr_stari; i ++) {
         }
     i++;
   }
-//
-//
-//   for( i = 0; i < indice; i++){
-//     for(  j = 0; j < nr_stari; j++)
-//       cout << matrice_afd[i][j] << " ";
-//   cout << endl;
-//   }
-//
-// cout << endl<< endl;
-//   for( i = 0; i < indice*nr_litere; i++){
-//     for(  j = 0; j < nr_stari; j++)
-//       cout << aux[i][j] << " ";
-//   cout << endl;
-//   }
-//   cout << endl;
+
 // ---------- AFISARE --------
 
    cout << "Numar stari AFD => " << nr_stari_afd << endl;
